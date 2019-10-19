@@ -9,6 +9,7 @@ if not RunService:IsEdit() then
 end
 
 local function formatText(text, mType)
+	text = text:gsub('[\r\n]', '\r\n')
 	if mType == 'error' then
 		return '\27[91m'..text..'\27[0m'
 	elseif mType == 'warn' then
