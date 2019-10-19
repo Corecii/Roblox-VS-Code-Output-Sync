@@ -3,6 +3,11 @@
 	"displayName": "Roblox Output Sync",
 	"description": "",
 	"license": "MIT",
+	"publisher": "corecii",
+	"repository": {
+		"type" : "git",
+		"url" : "https://github.com/corecii/Roblox-VS-Code-Output-Sync.git"
+	},
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.39.0"
