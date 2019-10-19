@@ -1,0 +1,56 @@
+{
+	"name": "roblox-output-sync",
+	"displayName": "Roblox Output Sync",
+	"description": "",
+	"license": "MIT",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.39.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"Roblox", "Lua"
+	],
+	"activationEvents": [
+		"onCommand:extension.start",
+		"onCommand:extension.stop"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.start",
+				"title": "Start Server",
+				"category": "Roblox Output"
+			},
+			{
+				"command": "extension.stop",
+				"title": "Stop Server",
+				"category": "Roblox Output"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.1",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.6",
+		"@types/node": "^12.11.1",
+		"@types/vscode": "^1.39.0",
+		"glob": "^7.1.4",
+		"mocha": "^6.1.4",
+		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
+		"vscode-test": "^1.2.0"
+	},
+	"dependencies": {
+		"delay": "^4.3.0",
+		"express": "^4.17.1"
+	}
+}
