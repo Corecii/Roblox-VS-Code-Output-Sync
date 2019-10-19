@@ -1,7 +1,7 @@
 {
 	"name": "roblox-output-sync",
 	"displayName": "Roblox Output Sync",
-	"description": "",
+	"description": "Shows Roblox output in VS Code for convenience. Requires a companion Roblox plugin.",
 	"license": "MIT",
 	"publisher": "corecii",
 	"repository": {

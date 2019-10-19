@@ -6,7 +6,9 @@ This extension will log output from Roblox in VS Code for easier access.
 
 ## Requirements
 
-You must install [this plugin](https://www.roblox.com/catalog/04158442719/redirect) ([Github](https://github.com/Corecii/Roblox-VS-Code-Output-Sync)) in Roblox Studio to use this extension. Once installed, click the "Toggle" button at the beginning of each session to start logging the output to VS Code.
+You must install [this extension](https://marketplace.visualstudio.com/items?itemName=corecii.roblox-output-sync) ([Github](https://github.com/Corecii/Roblox-VS-Code-Output-Sync/releases)) in VS Code to use this extension. Once installed, run the "Roblox Output: Start Server" command to allow Roblox to display output in VS Code.
+
+You must install [this plugin](https://www.roblox.com/catalog/04158442719/redirect) ([Github](https://github.com/Corecii/Roblox-VS-Code-Output-Sync/releases)) in Roblox Studio to use this extension. Once installed, click the "Toggle" button at the beginning of each session to start logging the output to VS Code.
 
 ## How-to
 
@@ -18,7 +20,7 @@ You must install [this plugin](https://www.roblox.com/catalog/04158442719/redire
 ## Known Issues
 
 * This extension will only work with one VS Code window at a time.
-* There is no way to differentiate between Edit, Server, and Client output. Roblox does not provide any API to differentiate these in Studio.
+* There is no way to differentiate between Edit, Server, and Client output. Roblox does not provide any API to differentiate these.
 * The Roblox-side plugin does not quit if the VS Code-side server goes down. It will warn you about logging failures until you toggle it off manually.
 
 ## Release Notes
