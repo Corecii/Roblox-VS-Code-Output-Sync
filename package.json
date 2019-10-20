@@ -4,7 +4,7 @@
 	"description": "Shows Roblox output in VS Code for convenience. Requires a companion Roblox plugin.",
 	"license": "MIT",
 	"publisher": "corecii",
-	"icon": "image/Icon_VSC@5x.png",
+	"icon": "images/icon.png",
 	"homepage": "https://github.com/Corecii/Roblox-VS-Code-Output-Sync/blob/master/README.md",
 	"repository": {
 		"type" : "git",
