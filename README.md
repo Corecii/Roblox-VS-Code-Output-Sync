@@ -13,7 +13,7 @@ You must install [this plugin](https://www.roblox.com/catalog/04158442719/redire
 ## How-to
 
 1. Install the Roblox plugin
-2. Run the "Roblox Output: Start Server" command. You can access commands with `Ctrl + Shift + P`.
+2. In VS Code, run the "Roblox Output: Start Server" command. You can access commands with `Ctrl + Shift + P`.
 3. In Roblox Studio, press the "Toggle" button in "VSCode Output".
 4. Roblox output should now show up in VS Code! Be sure to toggle the plugin off on the Roblox-side when you close VS Code as it won't turn itself off.
 
@@ -24,6 +24,15 @@ You must install [this plugin](https://www.roblox.com/catalog/04158442719/redire
 * The Roblox-side plugin does not quit if the VS Code-side server goes down. It will warn you about logging failures until you toggle it off manually.
 
 ## Release Notes
+
+## 0.1.0
+
+Output is now uploaded as chunks of characters instead of individual lines.
+Output that would be too large to upload in one request is now split into multiple requests.
+
+If the Roblox plugin or VS Code extension detects that its counterpart is outdated, then it will inform you that there is an update.
+
+Added icons.
 
 ## 0.0.3
 

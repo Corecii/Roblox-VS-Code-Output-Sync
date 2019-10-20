@@ -9,3 +9,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 roblox-plugin/**
+
+
+*.afdesign
+image/Icon_RBX*.png

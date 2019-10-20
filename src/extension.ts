@@ -4,9 +4,40 @@ import * as express from 'express';
 
 import * as delay from 'delay';
 
+const VSC_VERSION = [0, 1, 0];
+const RBX_VERSION = [0, 1, 0];
+
+let rbxPluginUpdateWarningShownThisSession = false;
+
 let server: any;
 
 let app: express.Application;
+
+function isVersionOld(base: number[], check: number[]) {
+	if (base[0] > check[0]) {
+		return true;
+	}
+	else if (base[0] < check[0]) {
+		return false;
+	}
+	if (base[1] > check[1]) {
+		return true;
+	}
+	else if (base[1] < check[1]) {
+		return false;
+	}
+	if (base[2] > check[2]) {
+		return true;
+	}
+	else if (base[2] < check[2]) {
+		return false;
+	}
+	return false;
+}
+
+function formatVersion(version: number[]) {
+	return `${version[0]}.${version[1]}.${version[2]}`;
+}
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -15,11 +46,17 @@ export function activate(context: vscode.ExtensionContext) {
 	let terminals = new Map<string, any>();
 
 	function makeTerminal(name: string) {
+		let open = false;
+		let logs: any = [];
 		let writeEmitter = new vscode.EventEmitter<string>();
 		let pty: vscode.Pseudoterminal = {
 			onDidWrite: writeEmitter.event,
 			open: (initialDimensions: vscode.TerminalDimensions | undefined) => {
-				
+				open = true;
+				for (let log of logs) {
+					writeEmitter.fire(log);
+				}
+				logs = undefined;
 			},
 			close: () => {
 				terminals.delete(name);
@@ -33,9 +70,14 @@ export function activate(context: vscode.ExtensionContext) {
 			pty: pty,
 		});
 		let data = {
-			writeEmitter: writeEmitter,
-			pty: pty,
-			terminal: terminal,
+			write: (text: string) => {
+				if (open) {
+					writeEmitter.fire(text);
+				}
+				else {
+					logs.push(text);
+				}
+			}
 		};
 		terminals.set(name, data);
 		terminal.show(false);
@@ -52,9 +94,72 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	app = express();
-	app.use(express.json());
+	app.use('/log', express.json({
+		limit: '1mb',
+	}));
+	app.use('/version', express.json());
+	app.use('/log2', express.text({
+		limit: '1mb',
+	}));
 	app.get('/', (req, res) => {
-		res.send('Running!');
+		res.send(`Roblox Output Sync VS Code Extension Version: ${formatVersion(VSC_VERSION)}`);
+	});
+	app.get('/version', (req, res) => {
+		res.json({
+			success: true,
+			version: RBX_VERSION,
+		});
+	});
+	app.post('/version', (req, res) => {
+		if (!req.body) {
+			res.status(400);
+			res.json({
+				success: false,
+				reason: 'Missing json',
+			});
+			return;
+		}
+		if (!req.body.version) {
+			res.status(400);
+			res.json({
+				success: false,
+				reason: 'Missing json.version',
+			});
+			return;
+		}
+		if (!Array.isArray(req.body.version)) {
+			res.status(400);
+			res.json({
+				success: false,
+				reason: 'json.version should be an array',
+			});
+			return;
+		}
+		if (req.body.version.length !== 3) {
+			res.status(400);
+			res.json({
+				success: false,
+				reason: 'json.version should be an array with 3 items',
+			});
+			return;
+		}
+		if (!rbxPluginUpdateWarningShownThisSession && isVersionOld(RBX_VERSION, req.body.version)) {
+			rbxPluginUpdateWarningShownThisSession = true;
+			vscode.window.showInformationMessage(`(${formatVersion(req.body.version)} -> ${formatVersion(RBX_VERSION)}) An update is available for the Roblox Output Sync Roblox plugin`);
+			if (req.body.requiredVersion && isVersionOld(req.body.requiredVersion, VSC_VERSION)) {
+				vscode.window.showErrorMessage(`The Roblox plugin is requiring at least version ${req.body.requiredVersion}. Your Roblox Output Sync VS Code extension is out of date! `);
+			}
+		}
+		res.json({
+			success: true,
+			version: RBX_VERSION,
+		});
+	});
+	app.post('/log2/:context', async (req, res) => {
+		let terminal = getOrMakeTerminal(req.params.context);
+		terminal.write(req.body);
+		res.status(200);
+		res.json({success: true});
 	});
 	app.post('/log', async (req, res) => {
 		if (!req.body) {
@@ -81,18 +186,15 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 			return;
 		}
-		let willWait = !terminals.has(req.body.Context);
+		if (!rbxPluginUpdateWarningShownThisSession) {
+			rbxPluginUpdateWarningShownThisSession = true;
+			vscode.window.showInformationMessage(`(0.0.3 -> ${formatVersion(RBX_VERSION)}) An update is available for the Roblox Output Sync Roblox plugin`);
+		}
 		let terminal = getOrMakeTerminal(req.body.Context);
-		if (willWait) {
-			await delay(500);
-		}
-		if (req.body.Clear) {
-			terminal.writeEmitter.fire('\x1b[2J');
-		}
 		for (let log of req.body.Logs) {
-			terminal.writeEmitter.fire(`${log}\r\n`);
+			terminal.write(`${log}\r\n`);
 		}
-		res.sendStatus(200);
+		res.sendStatus(200); // Oops! This is suppose to be `res.status(200);`. Leaving it for api1 consistency between versions.
 		res.json({success: true});
 	});
 
