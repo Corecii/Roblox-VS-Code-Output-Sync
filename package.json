@@ -7,10 +7,10 @@
 	"icon": "images/icon.png",
 	"homepage": "https://github.com/Corecii/Roblox-VS-Code-Output-Sync/blob/master/README.md",
 	"repository": {
-		"type" : "git",
-		"url" : "https://github.com/corecii/Roblox-VS-Code-Output-Sync.git"
+		"type": "git",
+		"url": "https://github.com/corecii/Roblox-VS-Code-Output-Sync.git"
 	},
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"engines": {
 		"vscode": "^1.39.0"
 	},
@@ -18,9 +18,11 @@
 		"Other"
 	],
 	"keywords": [
-		"Roblox", "Lua"
+		"Roblox",
+		"Lua"
 	],
 	"activationEvents": [
+		"*",
 		"onCommand:extension.start",
 		"onCommand:extension.stop"
 	],
@@ -37,7 +39,84 @@
 				"title": "Stop Server",
 				"category": "Roblox Output"
 			}
-		]
+		],
+		"configuration": {
+			"title": "roblox-output-sync",
+			"properties": {
+				"robloxOutputSync.startServerPort": {
+					"type": "number",
+					"default": 32337,
+					"description": "The port to start the local log capture server on",
+					"minimum": 0,
+					"maximum": 65535
+				},
+				"robloxOutputSync.startAutomatically": {
+					"type": "boolean",
+					"default": false,
+					"description": "Whether to start automatically. It is suggested that you do not turn this on globally. Try turning it on per-workspace/project."
+				},
+				"robloxOutputSync.useOutputChannels": {
+					"type": "boolean",
+					"default": true,
+					"description": "Use output channels instead of pseudo-terminals. Output channels support clickable file links but do not support proper colors."
+				},
+				"robloxOutputSync.useColorizerLabels": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Use [Output Colorizer](https://marketplace.visualstudio.com/items?itemName=IBM.output-colorizer)-compatible labels to colorize the output channel"
+				},
+				"robloxOutputSync.scriptPathAlwaysQuoted": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether to always quote file paths. If false, paths are only quoted if they contain a space."
+				},
+				"robloxOutputSync.scriptPathMini": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Whether to replace \"mini\" script paths such as `ServerStorage.Modules.Module:1`"
+				},
+				"robloxOutputSync.scriptPathRelative": {
+					"type": "boolean",
+					"default": false,
+					"description": "Whether to use relative or absolute paths. Relative paths cannot be clicked but look nicer."
+				},
+				"robloxOutputSync.scriptPathMode": {
+					"type": "string",
+					"enum": [
+						"File",
+						"Roblox",
+						"File (Roblox)"
+					],
+					"default": "File",
+					"description": "How script paths are displayed",
+					"enumDescriptions": [
+						"Show only the file path",
+						"Show only the Roblox path",
+						"Show both in the format of file_path (roblox_path)"
+					]
+				},
+				"robloxOutputSync.scriptPathResolver": {
+					"type": "string",
+					"enum": [
+						"Rojo",
+						"Name",
+						"RojoName"
+					],
+					"default": "RojoName",
+					"description": "How Roblox script paths are resolved to file paths",
+					"enumDescriptions": [
+						"Use Rojo's default.project.json to find files",
+						"Use the script name to find files",
+						"Use Rojo to find files and use the script name as a backup"
+					]
+				},
+				"robloxOutputSync.watchFiles": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "If true, builds a script name to file path map internally by watching all Lua files in the workspace. For the Rojo resolver, this is used to resolve special file names such as `.server.lua` and is used to exclude files that do not exist on the file system. For the Name resolver, this is the entire backbone and is required for any resolution."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -57,7 +136,10 @@
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
+		"@types/fs-extra": "^8.0.1",
+		"ansi-regex": "^5.0.0",
 		"delay": "^4.3.0",
-		"express": "^4.17.1"
+		"express": "^4.17.1",
+		"fs-extra": "^8.1.0"
 	}
 }

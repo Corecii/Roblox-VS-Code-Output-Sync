@@ -6,6 +6,8 @@ This extension can be found [on Visual Studio Marketplace](https://marketplace.v
 
 This extension will log output from Roblox in VS Code for easier access.
 
+This extension optionally converts Roblox paths to file paths so that you can click-to-go-to-source on errors.
+
 ## Requirements
 
 You must install [this plugin](https://www.roblox.com/catalog/04158442719/redirect) ([Github](https://github.com/Corecii/Roblox-VS-Code-Output-Sync/releases)) in Roblox Studio to use this extension. Once installed, click the "Toggle" button at the beginning of each session to start logging the output to VS Code.
@@ -24,6 +26,14 @@ You must install [this plugin](https://www.roblox.com/catalog/04158442719/redire
 * The Roblox-side plugin does not quit if the VS Code-side server goes down. It will warn you about logging failures until you toggle it off manually.
 
 ## Release Notes
+
+## 0.2.0
+
+Output is now shown using OutputChannels (optional).
+
+The plugin now converts Roblox script paths to file paths. When set to use OutputChannels, you can click on the path to go to the file.
+
+Many settings added in relation with the new output conversion feature.
 
 ## 0.1.0
 

@@ -1,0 +1,1 @@
+error('Error: from script init.server.lua')

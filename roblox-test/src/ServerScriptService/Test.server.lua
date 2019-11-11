@@ -1,0 +1,1 @@
+error("Error: from root directory server script");
